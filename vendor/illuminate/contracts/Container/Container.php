@@ -11,6 +11,9 @@ interface Container
      *
      * @param  string  $abstract
      * @return bool
+     *
+     * 判断是否在 instance bindings aliases 中存在
+     * return isset($this->bindings[$abstract]) || isset($this->instances[$abstract]) || $this->isAlias($abstract);
      */
     public function bound($abstract);
 
@@ -20,6 +23,12 @@ interface Container
      * @param  string  $abstract
      * @param  string  $alias
      * @return void
+     * 为一个类设置别名
+     * 例如:
+     *  dump($app->alias(mysqli::class,'xoxoxoxoxmmysql'));
+        $mysqli = $app->make('xoxoxoxoxmmysql',['host'=>'127.0.0.1','user'=>'root','password'=>'','database'=>'nodeapi','port'=>3306,'socket'=>'']);
+        $result = $mysqli->query("select * from origin_api");
+        dump($result->fetch_array());
      */
     public function alias($abstract, $alias);
 

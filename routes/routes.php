@@ -29,8 +29,12 @@ $app->get('{type:test|xx}',function () use ($app){
 //    dump($app);
 //    dump($app->resolved('index'));
 
-    dump(\Illuminate\Container\Container::getInstance()==$app);
+    dump($app->alias(mysqli::class,'xoxoxoxoxmmysql'));
 
+    $mysqli = $app->make('xoxoxoxoxmmysql',['host'=>'127.0.0.1','user'=>'root','password'=>'','database'=>'nodeapi','port'=>3306,'socket'=>'']);
+
+    $result = $mysqli->query("select * from origin_api");
+    dump($result->fetch_array());
 
 });
 
