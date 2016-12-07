@@ -38,6 +38,7 @@ interface Container
      * @param  array|string  $abstracts
      * @param  array|mixed   ...$tags
      * @return void
+     *
      */
     public function tag($abstracts, $tags);
 
@@ -56,6 +57,12 @@ interface Container
      * @param  \Closure|string|null  $concrete
      * @param  bool  $shared
      * @return void
+     * 绑定一个服务到容器中，若$concrete为闭包函数，这函数的参数为2个，一个全局的$app,一个接受make时传递的参数的数组类型
+     * $app->bind('xoxo', function($app, array $array){
+
+        });
+     *
+     *  $app->make('xoxo',array $array); make传递的参数必须为数组
      */
     public function bind($abstract, $concrete = null, $shared = false);
 
@@ -86,6 +93,9 @@ interface Container
      * @return void
      *
      * @throws \InvalidArgumentException
+     *
+     * 为绑定的服务添加一个拓展
+     *
      */
     public function extend($abstract, Closure $closure);
 
@@ -103,6 +113,20 @@ interface Container
      *
      * @param  string  $concrete
      * @return \Illuminate\Contracts\Container\ContextualBindingBuilder
+     * 有时侯我们可能有两个类使用同一个接口，但我们希望在每个类中注入不同实现，
+     * 例如，当系统接到一个新的订单的时候，我们想要通过PubNub而不是Pusher发送一个事件。
+     * Laravel定义了一个简单、平滑的方式来定义这种行为：
+     * $this->app->when('App\Handlers\Commands\CreateOrderHandler')
+            ->needs('App\Contracts\EventPusher')
+            ->give('App\Services\PubNubEventPusher');
+     *
+     * 你甚至还可以传递一个闭包到give方法：
+     * $this->app->when('App\Handlers\Commands\CreateOrderHandler')
+            ->needs('App\Contracts\EventPusher')
+            ->give(function () {
+                    // Resolve dependency...
+            });
+     *
      */
     public function when($concrete);
 
@@ -130,6 +154,7 @@ interface Container
      *
      * @param  string $abstract
      * @return bool
+     * 判断服务器是否已经成功充容器中make出来
      */
     public function resolved($abstract);
 
@@ -139,6 +164,7 @@ interface Container
      * @param  string    $abstract
      * @param  \Closure|null  $callback
      * @return void
+     *
      */
     public function resolving($abstract, Closure $callback = null);
 
