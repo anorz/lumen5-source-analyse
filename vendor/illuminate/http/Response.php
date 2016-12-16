@@ -41,8 +41,8 @@ class Response extends BaseResponse
         // the content to JSON. This is useful when returning something like models
         // from routes that will be automatically transformed to their JSON form.
         if ($this->shouldBeJson($content)) {
-            $this->header('Content-Type', 'application/json');
-
+            $this->header('Content-Type', 'application/json;charset=utf-8');
+            $this->header('X-Cache','This is a x-cache');
             $content = $this->morphToJson($content);
         }
 
@@ -68,7 +68,7 @@ class Response extends BaseResponse
             return $content->toJson();
         }
 
-        return json_encode($content);
+        return json_encode($content,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
     }
 
     /**

@@ -15,6 +15,10 @@ class ExampleMiddleware
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        /**
+         * @var $response \Illuminate\Http\Response
+         */
+        $response = $next($request);
+        return $response;
     }
 }

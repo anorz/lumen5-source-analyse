@@ -63,6 +63,12 @@ interface Container
         });
      *
      *  $app->make('xoxo',array $array); make传递的参数必须为数组
+     *
+     *  当$abstract为数组时：
+     *  $app->bind([mysqli::class=>'xoxoxoxoxmmysql']);
+     *  等价于
+     *  $app->bind('xoxoxoxoxmmysql',mysqli::class);
+     *
      */
     public function bind($abstract, $concrete = null, $shared = false);
 

@@ -189,7 +189,6 @@ trait RoutesRequests
     public function addRoute($method, $uri, $action)
     {
         $action = $this->parseAction($action);
-
         if (isset($this->groupAttributes)) {
             if (isset($this->groupAttributes['prefix'])) {
                 $uri = trim($this->groupAttributes['prefix'], '/').'/'.trim($uri, '/');
@@ -207,7 +206,6 @@ trait RoutesRequests
         if (isset($action['as'])) {
             $this->namedRoutes[$action['as']] = $uri;
         }
-
         if (is_array($method)) {
             foreach ($method as $verb) {
                 $this->routes[$verb.$uri] = ['method' => $verb, 'uri' => $uri, 'action' => $action];
@@ -231,6 +229,9 @@ trait RoutesRequests
             return [$action];
         }
 
+        /**
+         * 多个中间件用 | 分割
+         */
         if (isset($action['middleware']) && is_string($action['middleware'])) {
             $action['middleware'] = explode('|', $action['middleware']);
         }
@@ -338,7 +339,6 @@ trait RoutesRequests
     public function run($request = null)
     {
         $response = $this->dispatch($request);
-
         if ($response instanceof SymfonyResponse) {
             $response->send();
         } else {
@@ -382,11 +382,11 @@ trait RoutesRequests
      *
      * @param  SymfonyRequest|null  $request
      * @return Response
+     * 处理请求的核心函数
      */
     public function dispatch($request = null)
     {
         list($method, $pathInfo) = $this->parseIncomingRequest($request);
-
         try {
             return $this->sendThroughPipeline($this->middleware, function () use ($method, $pathInfo) {
                 if (isset($this->routes[$method.$pathInfo])) {
@@ -480,10 +480,14 @@ trait RoutesRequests
         $this['request']->setRouteResolver(function () {
             return $this->currentRoute;
         });
-
         $action = $routeInfo[1];
 
         // Pipe through route middleware...
+
+        /**
+         * callActionOnArrayBasedRoute()
+         *  Call the Closure on the array based route.
+         */
         if (isset($action['middleware'])) {
             $middleware = $this->gatherMiddlewareClassNames($action['middleware']);
 
@@ -508,6 +512,10 @@ trait RoutesRequests
         $action = $routeInfo[1];
 
         if (isset($action['uses'])) {
+            /**
+             * callControllerAction()
+             * 调用该方法去 make 控制器服务
+             */
             return $this->prepareResponse($this->callControllerAction($routeInfo));
         }
 
@@ -535,6 +543,11 @@ trait RoutesRequests
     {
         list($controller, $method) = explode('@', $routeInfo[1]['uses']);
 
+
+        /**
+         * 该方法的$this->make($controller) 没有传递 生成该控制器的构造函数的参数（__construct($name,$age)）
+         * 所以在路由使用的控制器时候 构造函数 __construct 必须不传递参数
+         */
         if (! method_exists($instance = $this->make($controller), $method)) {
             throw new NotFoundHttpException;
         }

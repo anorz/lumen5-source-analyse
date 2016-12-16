@@ -53,7 +53,6 @@ $app->bind('index',App\Http\Controllers\IndexController::class);
 $app->bind('xoxo',function(){
     return new \App\Events\BuyEvent();
 });
-
 $app->resolving('index',function(){
     file_put_contents('index.resolving','Index Resolving'.PHP_EOL,FILE_APPEND);
 });
@@ -77,9 +76,9 @@ $app->configure('common');
 //    App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
+ $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+ ]);
 
 /*
 |--------------------------------------------------------------------------
@@ -92,7 +91,7 @@ $app->configure('common');
 |
 */
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+ $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(App\Providers\BuyEventServiceProvider::class);
 /*
