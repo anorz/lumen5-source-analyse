@@ -58,12 +58,38 @@ return [
         ],
 
         'mysql' => [
+             'read' => [
+                [
+                    'host' => '127.0.0.1',
+                    'driver'    => 'mysql',
+                    'port'      => 3306,
+                    'database'  => 'xoxo',
+                    'username'  => 'root',
+                    'password'  => '',
+                ],
+                [
+                    'host' => '127.0.0.2',
+                    'driver'    => 'mysql',
+                    'port'      => 3306,
+                    'database'  => 'xoxo',
+                    'username'  => 'root',
+                    'password'  => '',
+                ]
+            ],
+            'write' => [
+                'host' => '127.0.0.1',
+                'driver'    => 'mysql',
+                'port'      => 3306,
+                'database'  => 'xoxo',
+                'username'  => 'root',
+                'password'  => '',
+            ],
             'driver'    => 'mysql',
-            'host'      => env('DB_HOST', 'localhost'),
-            'port'      => env('DB_PORT', 3306),
-            'database'  => env('DB_DATABASE', 'forge'),
-            'username'  => env('DB_USERNAME', 'forge'),
-            'password'  => env('DB_PASSWORD', ''),
+//             'host'      => env('DB_HOST', 'localhost'),
+//             'port'      => env('DB_PORT', 3306),
+//             'database'  => env('DB_DATABASE', 'forge'),
+//             'username'  => env('DB_USERNAME', 'forge'),
+//             'password'  => env('DB_PASSWORD', ''),
             'charset'   => env('DB_CHARSET', 'utf8'),
             'collation' => env('DB_COLLATION', 'utf8_unicode_ci'),
             'prefix'    => env('DB_PREFIX', ''),
